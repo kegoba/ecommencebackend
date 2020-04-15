@@ -10,8 +10,9 @@ from .models import Product, UserProfile , Cart,  Order
 from .Appserializer  import Productserializer, Userserializer, Cartserializer, Orderserializer
 
 
-def Home ():
-    pass
+def Home(request):
+
+    return render(request, "build/index.html", {})
 
 
 @api_view(["POST"])
