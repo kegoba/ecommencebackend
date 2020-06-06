@@ -42,6 +42,13 @@ class Product (models.Model):
 
 
 
+class Vtu_transaction(models.Model):
+    id  = models.AutoField(primary_key=True)
+    transaction_type = models.CharField("transaction type",null=True, max_length=100)
+    amount = models.DecimalField("amout", max_digits=10, null=True, decimal_places=2)
+    ref_id = models.CharField("reference number s", max_length=100)
+    phone = models.CharField("phone number credited", max_length=100)
+    user_id = models.ForeignKey(UserProfile, null=True, related_name="vtu_id", on_delete=models.CASCADE)
 
 
 

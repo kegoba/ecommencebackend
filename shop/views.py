@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from .models import Product, UserProfile , Cart,  Order
 
-from .Appserializer  import Productserializer, Userserializer, Cartserializer, Orderserializer
+from .Appserializer import Productserializer, Userserializer, Cartserializer, Orderserializer, Vtuserializer
 
 
 def Home(request):
@@ -31,11 +31,9 @@ def Update_user(request,id):
     if request.method == "POST":
         db_query = UserProfile.objects.get(user_id=id)
         user_info = Userserializer(db_query, many= True)
-        db_query.wallet += request.data.get("wallet")
-        #db_query.wallet = request.data.get("wallet")
-        #db_query.phone  = request.data.get("phone")
-        #db_query.password = request.data.get("password")
-        #email = request.data.get("email")
+        db_query.wallet = request.data.get("wallet", db_query.wallet)
+        db_query.phone  = request.data.get("phone", db_query.phone )
+        db_query.password = request.data.get("password", db_query.password)
         user_info = {
                     "user_id" : db_query.user_id,
                     "name" :  db_query.name,
@@ -48,7 +46,7 @@ def Update_user(request,id):
     return Response(user_info, status= status.HTTP_400_BAD_REQUEST)
 
 @api_view(["POST", "GET"])
-def Order(request, id):
+def Orders(request, id):
     error = { data : "could not complete your request"}
     if request.method == "POST" :
         user = UserProfile.objects.get(user_id = id)
@@ -64,7 +62,31 @@ def Order(request, id):
         all_cart = user.order_id.all()
         return Response(all_cart.values(), status= status.HTTP_200_OK)
     elif request.method == "GET":
-        all_item = post.order_id.all()
+        all_item = user.order_id.all()
+        return Response(all_item.values(), status= status.HTTP_200_OK)   
+    return Response(error, status= status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST", "GET"])
+def Vtu_record(request, id):
+    error = { data : "could not complete your request"}
+    if request.method == "POST" :
+        user = UserProfile.objects.get(user_id = id)
+        order = Vtuserializer(data=request.data)
+        ref_id = request.data.get("ref_id")
+        amount = request.data.get("amount")
+        phone = request.data.get("phone")
+        transaction_type = request.data.get("transaction_type")
+        vtu = user.vtu_id.create(
+            ref_id=ref_id, 
+            amount = amount,
+            transaction_type=transaction_type,
+            phone = phone
+        )
+        all_cart = user.vtu_id.all()
+        return Response(all_cart.values(), status= status.HTTP_200_OK)
+    elif request.method == "GET":
+        all_item = user.vtu_id.all()
         return Response(all_item.values(), status= status.HTTP_200_OK)   
     return Response(error, status= status.HTTP_400_BAD_REQUEST)
 

@@ -11,7 +11,8 @@ urlpatterns =[
     path("login/", views.Login_user, name="Login_user"),
     path("register/", views.Register_user, name="Register_user"),
     path("updateuser/<int:id>/", views.Update_user, name="Update_user"),
-    path("order/<int:id>/", views.Order, name="Order"),
+    path("vturecord/<int:id>/", views.Vtu_record, name="Vtu_record"),
+    path("order/<int:id>/", views.Orders, name="Orders"),
     path("saveproduct/", views.Post_product.as_view() , name="save_product"),
-    #Update_user
+    #Update_user 
 ]
