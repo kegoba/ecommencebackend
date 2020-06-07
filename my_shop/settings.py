@@ -12,7 +12,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR,"templates")
 SECRET_KEY = 'u4epc^p^f4$pcz@u9jr=6t@#m&h3d@)7y+@=m4=5xd-ov^ehd+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['kenshop.herokuapp.com', "localhost"]
 
