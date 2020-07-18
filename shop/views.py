@@ -69,7 +69,7 @@ def Orders(request, id):
 
 @api_view(["POST", "GET"])
 def Vtu_record(request, id):
-    error = { data : "could not complete your request"}
+    error = { "message" : "could not complete your request"}
     if request.method == "POST" :
         user = UserProfile.objects.get(user_id = id)
         order = Vtuserializer(data=request.data)
