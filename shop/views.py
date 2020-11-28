@@ -161,8 +161,8 @@ def GetWomenCategory(request):
 @api_view(["POST", "GET"])
 def Payment(request):
     if request.method == "POST":
-        print(request.data)
-        print("customer info ", request.data.customer)
+        print(request.data, request.data.email, request.data.id )
+        print(request.event)
         return Response(request.data, status= status.HTTP_200_OK)
     return Response(request.errors, status= status.HTTP_400_BAD_REQUEST)
 
