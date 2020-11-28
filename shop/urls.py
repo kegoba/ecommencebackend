@@ -14,5 +14,6 @@ urlpatterns =[
     path("vturecord/<int:id>/", views.Vtu_record, name="Vtu_record"),
     path("order/<int:id>/", views.Orders, name="Orders"),
     path("saveproduct/", views.Post_product.as_view() , name="save_product"),
+    path("payment/", views.Payment , name="payment")
     #Update_user 
 ]
