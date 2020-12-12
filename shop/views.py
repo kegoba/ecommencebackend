@@ -167,6 +167,7 @@ def GetWomenCategory(request):
 def Payment(request):
     paystack_sk = "sk_fromthepaystackguys"
     customer_data = json.loads(request.body)
+    print(customer_data , request.body)
     computed_hmac = hmac.new(
         bytes(paystack_sk, 'utf-8'),
     str.encode(request.body.decode('utf-8')),
