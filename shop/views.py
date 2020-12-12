@@ -168,7 +168,7 @@ def Payment(request):
     paystack_sk = "sk_fromthepaystackguys"
     customer_data = json.loads(request.body)
     print("customer data",customer_data)
-    print("data" ,request.data)
+    print("data" ,request.data.customer)
     
     return Response(request.data, status= status.HTTP_200_OK)
     return Response(request.errors, status= status.HTTP_400_BAD_REQUEST)
