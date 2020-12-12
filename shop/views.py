@@ -9,6 +9,7 @@ from rest_framework import status
 import hmac
 import hashlib
 import json
+from django.http import HttpResponse
 
 from .models import Product, UserProfile , Cart,  Order
 
@@ -164,7 +165,7 @@ def GetWomenCategory(request):
 
 
 @api_view(["POST", "GET"])
-def Payment(request):
+def Payment1(request):
     paystack_sk = "sk_fromthepaystackguys"
     customer_data = json.loads(request.body)
     print("customer data",customer_data)
@@ -175,4 +176,22 @@ def Payment(request):
 
 
 
-
+@api_view(["POST", "GET"])
+def Payment(request):
+    paystack_sk = "sk_fromthepaystackguys"
+    json_body = json.loads(request.body)
+    print(json_body, " json body")
+    computed_hmac = hmac.new(
+        bytes(paystack_sk, 'utf-8'),
+    str.encode(request.body.decode('utf-8')),
+        digestmod=hashlib.sha512
+        ).hexdigest()
+    print(computed_hmac," computed        mac")
+    if 'HTTP_X_PAYSTACK_SIGNATURE' in request.META:
+        if request.META['HTTP_X_PAYSTACK_SIGNATURE'] == computed_hmac:
+            #IMPORTANT! Handle webhook request asynchronously!!
+            #
+            #..code
+            #
+            return HttpResponse(status=200)
+    return HttpResponse(status=400) #non 200
