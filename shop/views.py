@@ -165,11 +165,9 @@ def GetWomenCategory(request):
 
 
 @api_view(["POST", "GET"])
-def Payment1(request):
-    paystack_sk = "sk_fromthepaystackguys"
-    customer_data = json.loads(request.body)
-    print("customer data",customer_data)
-    print("data" ,request)
+def Payment(request):
+    print("data" ,request.data)
+    print("customer", request.customer)
     
     return Response(request.data, status= status.HTTP_200_OK)
     return Response(request.errors, status= status.HTTP_400_BAD_REQUEST)
@@ -177,7 +175,7 @@ def Payment1(request):
 
 
 @api_view(["POST", "GET"])
-def Payment(request):
+def Payment1111(request):
     paystack_sk = "sk_fromthepaystackguys"
     json_body = json.loads(request.body)
     print(json_body, " json body")
