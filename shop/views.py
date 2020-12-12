@@ -167,12 +167,14 @@ def GetWomenCategory(request):
 def Payment(request):
     paystack_sk = "sk_fromthepaystackguys"
     customer_data = json.loads(request.body)
-    print("customer data",customer_data,"event   event ", customer_data.event )
+    print("customer data",customer_data)
     computed_hmac = hmac.new(
         bytes(paystack_sk, 'utf-8'),
     str.encode(request.body.decode('utf-8')),
         digestmod=hashlib.sha512
         ).hexdigest()
+    print(computed_hmac)
+    print(customer_data.data.id)
     if 'HTTP_X_PAYSTACK_SIGNATURE' in request.META:
         if request.META['HTTP_X_PAYSTACK_SIGNATURE'] == computed_hmac:
             print(customer_data)
