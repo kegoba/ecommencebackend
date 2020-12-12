@@ -173,8 +173,7 @@ def Payment(request):
     str.encode(request.body.decode('utf-8')),
         digestmod=hashlib.sha512
         ).hexdigest()
-    print(computed_hmac)
-    print(customer_data.data.id)
+    print(computed_hmac, "computed hmac")
     if 'HTTP_X_PAYSTACK_SIGNATURE' in request.META:
         if request.META['HTTP_X_PAYSTACK_SIGNATURE'] == computed_hmac:
             print(customer_data)
