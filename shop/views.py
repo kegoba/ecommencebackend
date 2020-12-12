@@ -5,6 +5,11 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework import status
+
+import hmac
+import hashlib
+import json
+
 from .models import Product, UserProfile , Cart,  Order
 
 from .Appserializer import Productserializer, Userserializer, Cartserializer, Orderserializer, Vtuserializer
@@ -56,14 +61,14 @@ def Orders(request, id):
         print("from front end", total_price, order_item)
         cart = user.order_id.create(
             item_order=order_item,
-            user_id = user.user_id, 
+            user_id = user.user_id,
             total_price = total_price
         )
         all_cart = user.order_id.all()
         return Response(all_cart.values(), status= status.HTTP_200_OK)
     elif request.method == "GET":
         all_item = user.order_id.all()
-        return Response(all_item.values(), status= status.HTTP_200_OK)   
+        return Response(all_item.values(), status= status.HTTP_200_OK)
     return Response(error, status= status.HTTP_400_BAD_REQUEST)
 
 
@@ -78,7 +83,7 @@ def Vtu_record(request, id):
         phone = request.data.get("phone")
         transaction_type = request.data.get("transaction_type")
         vtu = user.vtu_id.create(
-            ref_id=ref_id, 
+            ref_id=ref_id,
             amount = amount,
             transaction_type=transaction_type,
             phone = phone
@@ -87,14 +92,14 @@ def Vtu_record(request, id):
         return Response(all_cart.values(), status= status.HTTP_200_OK)
     elif request.method == "GET":
         all_item = user.vtu_id.all()
-        return Response(all_item.values(), status= status.HTTP_200_OK)   
+        return Response(all_item.values(), status= status.HTTP_200_OK)
     return Response(error, status= status.HTTP_400_BAD_REQUEST)
 
 
 
 
 
-   
+
 
 @api_view(["POST"])
 def Login_user(request):
@@ -103,7 +108,7 @@ def Login_user(request):
         user_data = Userserializer(data= request.data)
         password = (user_data.initial_data["password"])
         email = user_data.initial_data["email"]
-        db_query = UserProfile.objects.get(email=email) 
+        db_query = UserProfile.objects.get(email=email)
         if db_query:
             if ((db_query.password) == (password)):
                 user_info = {
@@ -137,7 +142,7 @@ class Post_product(APIView):
             product.save()
             return Response(product.data, status= status.HTTP_200_OK)
         return Response(product.errors, status= status.HTTP_400_BAD_REQUEST)
-   
+
 
 
 @api_view(["GET"])
@@ -157,14 +162,22 @@ def GetWomenCategory(request):
         return Response(women.data, status= status.HTTP_200_OK)
     return Response(women.errors, status= status.HTTP_400_BAD_REQUEST)
 
-        
+
 @api_view(["POST", "GET"])
 def Payment(request):
-    if request.method == "POST":
-        print(request.data, request.data.event)
+    paystack_sk = "sk_fromthepaystackguys"
+    customer_data = json.loads(request.body)
+    computed_hmac = hmac.new(
+        bytes(paystack_sk, 'utf-8'),
+    str.encode(request.body.decode('utf-8')),
+        digestmod=hashlib.sha512
+        ).hexdigest()
+    if 'HTTP_X_PAYSTACK_SIGNATURE' in request.META:
+        if request.META['HTTP_X_PAYSTACK_SIGNATURE'] == computed_hmac:
+            print(customer_data)
         return Response(request.data, status= status.HTTP_200_OK)
     return Response(request.errors, status= status.HTTP_400_BAD_REQUEST)
 
-        
 
-    
+
+
