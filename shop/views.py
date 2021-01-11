@@ -165,6 +165,7 @@ def GetWomenCategory(request):
 def Payment(request):
     print(dir(request.data))
     email = request.data.get("email")
+    print(email)
 
 
     print("customer", request.customer)
