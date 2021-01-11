@@ -163,11 +163,10 @@ def GetWomenCategory(request):
 
 @api_view(["POST", "GET"])
 def Payment(request):
-    #payment = Payment.objects.get(user_id=user_id)
-    user_data = Userserializer(data= request.data)
-    email = user_data.initial_data["email"]
+    print(dir(request.data))
+    email = request.data.get("email")
 
-    print("customer Eamil" , email)
+
     print("customer", request.customer)
     
     return Response(request.data, status= status.HTTP_200_OK)
