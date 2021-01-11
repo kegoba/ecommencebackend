@@ -167,7 +167,7 @@ def Payment(request):
     email = request.data.get("email")
     print("customers email",  email)
     email2  = request.data.__getitem__("email")
-    print("customer email 2" email2)
+    print("customer email 2" ,  email2)
 
     for customer_details in request.data:
 
