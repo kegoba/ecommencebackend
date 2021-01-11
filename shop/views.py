@@ -165,10 +165,17 @@ def GetWomenCategory(request):
 def Payment(request):
     print(dir(request.data))
     email = request.data.get("email")
-    print(email)
+    print("customers email",  email)
+    email2  = request.data.__getitem__("email")
+    print("customer email 2" email2)
+
+    for customer_details in request.data:
+
+        print(customer_details.email)
 
 
-    print("customer", request.customer)
+
+    print("customer", request.data)
     
     return Response(request.data, status= status.HTTP_200_OK)
     return Response(request.errors, status= status.HTTP_400_BAD_REQUEST)
