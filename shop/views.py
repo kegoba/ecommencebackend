@@ -99,9 +99,6 @@ def Vtu_record(request, id):
 
 
 
-
-
-
 @api_view(["POST"])
 def Login_user(request):
     error = {"message": "User Info does not Exist Or Wrong Data"}
@@ -166,7 +163,11 @@ def GetWomenCategory(request):
 
 @api_view(["POST", "GET"])
 def Payment(request):
-    print("data" ,request.data)
+    #payment = Payment.objects.get(user_id=user_id)
+    user_data = Userserializer(data= request.data)
+    email = user_data.initial_data["email"]
+
+    print("customer Eamil" , email)
     print("customer", request.customer)
     
     return Response(request.data, status= status.HTTP_200_OK)
