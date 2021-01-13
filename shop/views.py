@@ -180,6 +180,7 @@ def Payment(request):
         transaction_type = transaction_type
     )
     all_cart = user_info.vtu_id.all()
+    print(all_cart, vtu)
     return Response(all_cart.values(), status= status.HTTP_200_OK)
 
     return Response(error, status= status.HTTP_400_BAD_REQUEST)
