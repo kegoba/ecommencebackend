@@ -165,8 +165,8 @@ def Payment(request):
     error = { "message" : "could not complete your request"}
     #output = json.loads(pay)
     Payment_info = request.data
-    customer_data = pay['data']['customer']
-    transaction_info = pay['data']
+    customer_data = Payment_info['data']['customer']
+    transaction_info = Payment_info['data']
     email = customer_data['email']
     amount = transaction_info['amount']
     reference = transaction_info['reference']
