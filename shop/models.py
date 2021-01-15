@@ -16,6 +16,7 @@ class Transaction(models.Model):
     id  = models.AutoField(primary_key=True)
     orders = models.CharField("orders",null=True, max_length=100)
     pending = models.CharField("pending orders", max_length=100)
+    pending = models.CharField("pending orders", max_length=100)
     user_id = models.ForeignKey(UserProfile, null=True, related_name="transaction_id", on_delete=models.CASCADE)
 
 class Order(models.Model):
@@ -35,7 +36,7 @@ class Cart(models.Model):
 class Product (models.Model):
     product_id = models.AutoField(primary_key=True)
     product_price = models.DecimalField("price of product", max_digits=10, null=True, decimal_places=2)
-    product_category = models.CharField("list of Catergories", null=True, max_length=100) #product_category
+    product_category = models.CharField("list of Catergories", null=True, max_length=100)
     image = models.ImageField("image", upload_to='post_images' , null=True)
     product_desc = models.CharField("product description", null=True, max_length=100)
 
@@ -46,9 +47,11 @@ class Vtu_transaction(models.Model):
     id  = models.AutoField(primary_key=True)
     transaction_type = models.CharField("transaction type",null=True, max_length=100)
     amount = models.DecimalField("amout", max_digits=10, null=True, decimal_places=2)
-    ref_id = models.CharField("reference number s", max_length=100)
-    phone = models.CharField("phone number credited", max_length=100)
+    ref_id = models.CharField("reference number", max_length=100)
+    phone = models.CharField("phone number credited", null=True, max_length=100)
+    transaction_time = models.CharField("transaction time", null=True,  max_length=100)
     user_id = models.ForeignKey(UserProfile, null=True, related_name="vtu_id", on_delete=models.CASCADE)
+    
 
 
 

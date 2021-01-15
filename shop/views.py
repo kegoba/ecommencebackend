@@ -20,7 +20,6 @@ def Home(request):
 
     return render(request, "build/index.html", {})
 
-
 @api_view(["POST"])
 def Register_user(request):
     if request.method == "POST":
@@ -30,8 +29,6 @@ def Register_user(request):
             return Response(register.data, status= status.HTTP_200_OK)
     return Response(register.errors, status= status.HTTP_400_BAD_REQUEST)
 
-
-
 @api_view(["POST"])
 def Update_user(request,id):
     if request.method == "POST":
@@ -40,12 +37,15 @@ def Update_user(request,id):
         db_query.wallet = request.data.get("wallet", db_query.wallet)
         db_query.phone  = request.data.get("phone", db_query.phone )
         db_query.password = request.data.get("password", db_query.password)
+        db_query.email = request.data.get("email", db_query.email)
+        db_query.name = request.data.get("name", db_query.password)
         user_info = {
                     "user_id" : db_query.user_id,
                     "name" :  db_query.name,
                     "wallet" : db_query.wallet,
                     "email" : db_query.email,
-                    "phone" : db_query.phone
+                    "phone" : db_query.phone,
+                    "name"  : db_query.name
                 }
         db_query.save()
         return Response(user_info, status= status.HTTP_200_OK)
@@ -78,7 +78,7 @@ def Vtu_record(request, id):
     error = { "message" : "could not complete your request"}
     if request.method == "POST" :
         user = UserProfile.objects.get(user_id = id)
-        order = Vtuserializer(data=request.data)
+        #order = Vtuserializer(data=request.data)
         ref_id = request.data.get("ref_id")
         amount = request.data.get("amount")
         phone = request.data.get("phone")
@@ -95,8 +95,6 @@ def Vtu_record(request, id):
         all_item = user.vtu_id.all()
         return Response(all_item.values(), status= status.HTTP_200_OK)
     return Response(error, status= status.HTTP_400_BAD_REQUEST)
-
-
 
 
 @api_view(["POST"])
@@ -161,43 +159,28 @@ def GetWomenCategory(request):
     return Response(women.errors, status= status.HTTP_400_BAD_REQUEST)
 
 
+
 @api_view(["POST", "GET"])
 def Payment(request):
-    print(dir(request.data))
-    email = request.data.get("email")
-    print("customers email",  email)
-    email2  = request.data.__getitem__("email")
-    print("customer email 2" ,  email2)
+    error = { "message" : "could not complete your request"}
+    #output = json.loads(pay)
+    Payment_info = request.data
+    customer_data = pay['data']['customer']
+    transaction_info = pay['data']
+    email = customer_data['email']
+    amount = transaction_info['amount']
+    reference = transaction_info['reference']
+    transaction_time = transaction_info['paid_at']
+    user_info = UserProfile.objects.get(email=email)
+    transaction_type = "PAYSTACK FUNDING"
+    vtu = user_info.vtu_id.create(
+        ref_id = reference,
+        amount = amount,
+        transaction_time = transaction_time,
+        transaction_type = transaction_type
+    )
+    all_cart = user_info.vtu_id.all()
+    return Response(all_cart.values(), status= status.HTTP_200_OK)
 
-    for customer_details in request.data:
+    return Response(error, status= status.HTTP_400_BAD_REQUEST)
 
-        print(customer_details.email)
-
-
-
-    print("customer", request.data)
-    
-    return Response(request.data, status= status.HTTP_200_OK)
-    return Response(request.errors, status= status.HTTP_400_BAD_REQUEST)
-
-
-
-@api_view(["POST", "GET"])
-def Payment1111(request):
-    paystack_sk = "sk_fromthepaystackguys"
-    json_body = json.loads(request.body)
-    print(json_body, " json body")
-    computed_hmac = hmac.new(
-        bytes(paystack_sk, 'utf-8'),
-    str.encode(request.body.decode('utf-8')),
-        digestmod=hashlib.sha512
-        ).hexdigest()
-    print(computed_hmac," computed        mac")
-    if 'HTTP_X_PAYSTACK_SIGNATURE' in request.META:
-        if request.META['HTTP_X_PAYSTACK_SIGNATURE'] == computed_hmac:
-            #IMPORTANT! Handle webhook request asynchronously!!
-            #
-            #..code
-            #
-            return HttpResponse(status=200)
-    return HttpResponse(status=400) #non 200

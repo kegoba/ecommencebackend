@@ -29,4 +29,4 @@ class Orderserializer(serializers.ModelSerializer):
 class Vtuserializer(serializers.ModelSerializer):
     class Meta:
         model= Vtu_transaction
-        fields = ["id", "transaction_type","phone", "ref_id", "amount", "user_id"]
+        fields = ["id", "transaction_type","phone", "ref_id", "amount", "user_id", "transaction_time"]
